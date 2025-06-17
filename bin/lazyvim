@@ -1,0 +1,49 @@
+#!/bin/bash
+
+set -e
+
+help() {
+  echo "用法:"
+  echo -e "\t$0 --vim [目录] 使用 lazyvim打开目录"
+  echo -e "\t$0  [目录] 使用 fish 打开目录"
+}
+
+if [ $# -gt 2 ] || [ $# -lt 1 ]; then
+  help
+  exit 0
+fi
+
+argCount=$#
+
+hasVim='false'
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --vim)
+      hasVim='true'
+      shift
+      ;;
+    *)
+      dir="$1"
+      shift
+      ;;
+  esac
+done
+
+
+if [ "${hasVim}" = "false" ] && [ ${argCount} -gt 1 ]; then
+  help
+  exit 1
+fi
+
+if [ ! -d "${dir}" ]; then
+  echo "目录 ${dir} 不存在或者不是文件夹"
+  exit 1
+fi
+
+if [ "${hasVim}" = "true" ]; then
+  docker run -it --name lazyvim -v ${dir}:/code --network=host --rm --entrypoint vim  registry.cn-hangzhou.aliyuncs.com/xiaocheng2014/lazyvim:base-image "/code"
+else
+  docker run -it --name lazyvim -v ${dir}:/code --network=host --rm --entrypoint fish  registry.cn-hangzhou.aliyuncs.com/xiaocheng2014/lazyvim:base-image
+fi
+
