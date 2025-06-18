@@ -2,7 +2,7 @@
 
 set -e
 
-rm -f /usr/local/bin/lzyvim
+rm -f /usr/local/bin/lazyvim
 
 docker rmi registry.cn-hangzhou.aliyuncs.com/xiaocheng2014/lazyvim:base-image
 
