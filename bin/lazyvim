@@ -19,17 +19,16 @@ hasVim='false'
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --vim)
-      hasVim='true'
-      shift
-      ;;
-    *)
-      dir="$1"
-      shift
-      ;;
+  --vim)
+    hasVim='true'
+    shift
+    ;;
+  *)
+    dir="$1"
+    shift
+    ;;
   esac
 done
-
 
 if [ "${hasVim}" = "false" ] && [ ${argCount} -gt 1 ]; then
   help
@@ -41,9 +40,10 @@ if [ ! -d "${dir}" ]; then
   exit 1
 fi
 
-if [ "${hasVim}" = "true" ]; then
-  docker run -it --name lazyvim -v ${dir}:/code --network=host --rm --entrypoint vim  registry.cn-hangzhou.aliyuncs.com/xiaocheng2014/lazyvim:base-image "/code"
-else
-  docker run -it --name lazyvim -v ${dir}:/code --network=host --rm --entrypoint fish  registry.cn-hangzhou.aliyuncs.com/xiaocheng2014/lazyvim:base-image
-fi
+IMAGE_PATH="registry.cn-hangzhou.aliyuncs.com/xiaocheng2014/lazyvim:base-image"
 
+if [ "${hasVim}" = "true" ]; then
+  docker run -it --name lazyvim -v ${dir}:/code --network=host --rm --entrypoint vim "${IMAGE_PATH}" "/code"
+else
+  docker run -it --name lazyvim -v ${dir}:/code --network=host --rm --entrypoint fish "${IMAGE_PATH}"
+fi
